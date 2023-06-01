@@ -1,6 +1,9 @@
 from fastapi import APIRouter
+import uuid
 
 import app.dto
+
+import storage.events
 
 
 event_router = APIRouter(prefix='/events', tags=['events'])
@@ -23,11 +26,11 @@ def get_event(id: int) -> app.dto.Event:
 
 
 @event_router.post('/')
-def create_event(event: app.dto.Event) -> app.dto.Event:
+def create_event(event: app.dto.Event) -> uuid.UUID:
     """
     Create new event
     """
-    return event
+    return storage.events.create_event(event)
 
 
 @event_router.put('/{id}') 
