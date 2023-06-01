@@ -19,8 +19,7 @@ def get_all_events(start: int = 0, offset: int = 10) -> list[app.dto.EventRespon
 
     db_respones = storage.events.read_events()
 
-    if db_respones is not None:
-        events = [app.dto.EventResponse.from_orm(value) for value in db_respones] # type: ignore
+    events = [app.dto.EventResponse.from_orm(value) for value in db_respones] # type: ignore
 
     return events[start : start + offset]
 
@@ -48,11 +47,16 @@ def create_event(event: app.dto.Event) -> uuid.UUID:
 
 
 @event_router.put('/{id}') 
-def update_event(id: int, event: app.dto.Event) -> app.dto.Event:
+def update_event(id: str, event: app.dto.Event):
     """
     Change an existing event
     """
-    return {'id': id, 'event': event}
+    result = storage.events.update_event(id, event)
+
+    if result:
+        return JSONResponse(status_code=status.HTTP_200_OK, content='Event updated')
+    else:
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content='Wrong id')
 
 
 @event_router.delete('/{id}')

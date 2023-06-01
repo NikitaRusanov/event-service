@@ -33,6 +33,22 @@ def read_events(id: str | None = None) -> list[storage.models.Event] | storage.m
     
     return result
 
+
+def update_event(id: str, event: app.dto.Event) -> bool:
+    with session() as db:
+        if value := db.get(storage.models.Event, id):
+            value.name = event.name
+            value.date = event.date
+            value.description = event.description
+
+            db.commit()
+
+            return True
+        else:
+            return False
+
+
+
     
 
     
