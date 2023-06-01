@@ -1,4 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, status
+from fastapi.responses import JSONResponse
+
 import uuid
 
 import app.dto
@@ -10,19 +12,31 @@ event_router = APIRouter(prefix='/events', tags=['events'])
 
 
 @event_router.get('/')
-def get_all_events(start: int = 0, offset: int = 10) -> list[app.dto.Event]:
+def get_all_events(start: int = 0, offset: int = 10) -> list[app.dto.EventResponse]:
     """
     Returns the **offset** of the events, starting from the event with the number **start** 
     """
-    return {'start': start, 'offset': offset}
+
+    db_respones = storage.events.read_events()
+
+    if db_respones is not None:
+        events = [app.dto.EventResponse.from_orm(value) for value in db_respones] # type: ignore
+
+    return events[start : start + offset]
 
 
 @event_router.get('/{id}')
-def get_event(id: int) -> app.dto.Event:
+def get_event(id: str) -> app.dto.EventResponse:
     """
     Returns single evrnt by it's ID
     """
-    return {'id': id}
+    db_response = storage.events.read_events(id)
+    
+    if db_response is not None:
+        event = app.dto.EventResponse.from_orm(db_response) # type: ignore
+        return event
+
+    return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content='Wrong ID') # type: ignore
 
 
 @event_router.post('/')

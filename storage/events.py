@@ -21,4 +21,18 @@ def create_event(event: app.dto.Event) -> uuid.UUID:
     
     return value_id
 
+
+def read_events(id: str | None = None) -> list[storage.models.Event] | storage.models.Event | None:
+    result = None
+
+    with session() as db:
+        if id is None:
+            result = db.query(storage.models.Event).all()
+        else:
+            result = db.get(storage.models.Event, id)
+    
+    return result
+
+    
+
     
