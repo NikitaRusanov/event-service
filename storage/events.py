@@ -37,9 +37,9 @@ def read_events(id: str | None = None) -> list[storage.models.Event] | storage.m
 def update_event(id: str, event: app.dto.Event) -> bool:
     with session() as db:
         if value := db.get(storage.models.Event, id):
-            value.name = event.name
-            value.date = event.date
-            value.description = event.description
+            value.name = event.name # type: ignore
+            value.date = event.date # type: ignore
+            value.description = event.description # type: ignore
 
             db.commit()
 
@@ -48,6 +48,16 @@ def update_event(id: str, event: app.dto.Event) -> bool:
             return False
 
 
+def delete_event(id: str) -> bool:
+    with session() as db:
+        if value := db.get(storage.models.Event, id):
+            db.delete(value)
+            db.commit()
+
+            return True
+        else:
+            return False
+    
 
     
 

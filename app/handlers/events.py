@@ -60,8 +60,14 @@ def update_event(id: str, event: app.dto.Event):
 
 
 @event_router.delete('/{id}')
-def delete_event(id: int) -> app.dto.Event:
+def delete_event(id: str):
     """
     Delete an existing event
     """
-    return {'id': id}
+
+    result = storage.events.delete_event(id)
+
+    if result:
+        return JSONResponse(status_code=status.HTTP_200_OK, content='Event deleted')
+    else:
+        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content='Wrong id')

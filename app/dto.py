@@ -21,7 +21,7 @@ class EventResponse(Event):
     def from_orm(cls, obj: storage.models.Event) -> EventResponse:
         return cls(
             name = str(obj.name),
-            date = obj.date,
-            description = obj.description,
-            id = obj.id
+            date = obj.date, # type: ignore
+            description = obj.description, # type: ignore
+            id = obj.id # type: ignore
         )
