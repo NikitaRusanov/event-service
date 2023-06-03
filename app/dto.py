@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from typing import Any, Type
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from datetime import date
 
 import storage.models
@@ -25,3 +25,11 @@ class EventResponse(Event):
             description = obj.description, # type: ignore
             id = obj.id # type: ignore
         )
+
+
+class User(BaseModel):
+    name: str
+    email: EmailStr
+    password: str
+    following_events: list[str]
+    
