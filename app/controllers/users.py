@@ -17,3 +17,14 @@ def get_user(id: int) -> app.dto.UserResponse:
     user = storage.users.get_user(id)
 
     return user
+
+
+def update_user(id: int, user: app.dto.User) -> app.dto.User | None:
+    res = storage.users.update_user(
+        id=id,
+        name = user.name,
+        email=user.email,
+        password=user.password
+    )
+
+    return user if res else None
