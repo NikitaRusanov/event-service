@@ -20,7 +20,7 @@ class EventResponse(Event):
     @classmethod
     def from_orm(cls, obj: storage.models.Event) -> EventResponse:
         return cls(
-            name = str(obj.name),
+            name = obj.name,
             date = obj.date, # type: ignore
             description = obj.description, # type: ignore
             id = obj.id # type: ignore
@@ -31,5 +31,19 @@ class User(BaseModel):
     name: str
     email: EmailStr
     password: str
-    following_events: list[str]
+    following_events: list[str] | None = None
+
+
+class UserResponse(User):
+    id: int
+
+    @classmethod
+    def from_orm(cls, obj: storage.models.User) -> User:
+        return cls(
+            id = obj.id,
+            name=obj.name,
+            email=obj.email,
+            password=obj.password,
+            following_events=obj.following_events
+        )
     
