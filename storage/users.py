@@ -31,15 +31,15 @@ def get_user(id: int) -> app.dto.UserResponse | None:
         
 
 
-def update_user(id: int, name: str | None = None, email: str | None = None, password: str | None = None) -> bool:
+def update_user(id: int, name: str | None = None, email: str | None = None) -> app.dto.UserResponse | None:
     with session() as db:
         if user := db.get(storage.models.User, id):
             user.name = name if name else user.name
             user.email = email if email else user.email
-            user.password = password if password else user.password
-            return True
-    
-    return False
+            db.commit()
+
+            return app.dto.UserResponse.from_orm(user)
+    return None
         
 
 def delete_user(id: int) -> bool:

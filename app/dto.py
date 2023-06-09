@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any, Type
 from pydantic import BaseModel, EmailStr
 from datetime import date
+from enum import Enum
 
 import storage.models
 
@@ -47,3 +48,8 @@ class UserResponse(User):
             following_events=obj.following_events
         )
     
+
+class ResultCode(Enum):
+    OK = 0
+    WRONG_PASS = 1
+    NOT_FOUND = 2

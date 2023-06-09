@@ -19,15 +19,24 @@ def get_user(id: int) -> app.dto.UserResponse:
     return user
 
 
-def update_user(id: int, user: app.dto.User) -> app.dto.User | None:
+def update_user(id: int, user: app.dto.User) -> app.dto.User | app.dto.ResultCode:
+    
+    user_db = storage.users.get_user(id)
+
+    if not user_db:
+        return app.dto.ResultCode.NOT_FOUND
+
+    if user_db.password != user.password:
+        return app.dto.ResultCode.WRONG_PASS
+    
+
     res = storage.users.update_user(
         id=id,
         name = user.name,
         email=user.email,
-        password=user.password
     )
 
-    return user if res else None
+    return res if res else app.dto.ResultCode.NOT_FOUND
 
 
 def delete_user(id: int) -> app.dto.UserResponse | None:

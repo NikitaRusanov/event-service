@@ -29,9 +29,14 @@ def create_user(user: app.dto.User) -> int:
 def update_user(id: int, user: app.dto.User):
     """Change user information"""
 
-    if res := app.controllers.users.update_user(id, user):
-        return res
-    return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content='User not found')
+    res = app.controllers.users.update_user(id, user)
+
+    if res == app.dto.ResultCode.NOT_FOUND:
+        return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content='User not found')
+    if res == app.dto.ResultCode.WRONG_PASS:
+        return JSONResponse(status_code=status.HTTP_403_FORBIDDEN, content='Wrong password')
+    return res
+    
 
 
 @users_router.delete('/{id}', response_model=app.dto.UserResponse, response_model_exclude={'password'})
