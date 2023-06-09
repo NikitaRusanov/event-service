@@ -14,8 +14,7 @@ def get_user(id: int) -> app.dto.UserResponse:
 
     if res := app.controllers.users.get_user(id):
         return app.controllers.users.get_user(id)
-    else:
-        return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content='Wrond user ID')
+    return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content='User not found')
 
 
 @users_router.post('/')
@@ -26,14 +25,22 @@ def create_user(user: app.dto.User) -> int:
     return user_id
 
 
-@users_router.put('/{id}')
+@users_router.put('/{id}', response_model=app.dto.UserResponse, response_model_exclude={'password'})
 def update_user(id: int, user: app.dto.User):
     """Change user information"""
 
-    return app.controllers.users.update_user()
+    if res := app.controllers.users.update_user(id, user):
+        return res
+    return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content='User not found')
 
 
-@users_router.delete('/{id}')
+@users_router.delete('/{id}', response_model=app.dto.UserResponse, response_model_exclude={'password'})
 def delete_user(id: int):
     """Delete user"""
-    return None
+    
+    if res := app.controllers.users.delete_user(id):
+        return res
+    return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content='User not found')
+
+
+

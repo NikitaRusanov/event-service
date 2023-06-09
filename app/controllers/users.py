@@ -28,3 +28,12 @@ def update_user(id: int, user: app.dto.User) -> app.dto.User | None:
     )
 
     return user if res else None
+
+
+def delete_user(id: int) -> app.dto.UserResponse | None:
+    user = storage.users.get_user(id)
+    res = storage.users.delete_user(id)
+
+    if res:
+        return user
+    return None

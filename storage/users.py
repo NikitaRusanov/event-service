@@ -42,11 +42,12 @@ def update_user(id: int, name: str | None = None, email: str | None = None, pass
     return False
         
 
-def delete_user(id: int) -> storage.models.User | None:
+def delete_user(id: int) -> bool:
     with session() as db:
         if user := db.get(storage.models.User, id):
             db.delete(user)
-            return user
+            db.commit()
+            return True
         else:
-            return None
+            return False
     
