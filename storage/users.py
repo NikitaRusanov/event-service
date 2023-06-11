@@ -50,3 +50,17 @@ def delete_user(id: int) -> bool:
             db.commit()
             return True
         return False
+
+
+def subscribe(user_id: int, event_id: str) -> app.dto.UserResponse:
+    with session() as db:
+        user = db.get(storage.models.User, user_id)
+        event = db.get(storage.models.Event, event_id)
+
+        user.following_events.append(event)
+        res = app.dto.UserResponse.from_orm(user)
+        db.commit()
+    return res
+
+
+

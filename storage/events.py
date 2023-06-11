@@ -18,14 +18,15 @@ def create_event(event: app.dto.Event) -> uuid.UUID:
     return value_id
 
 
-def read_events(id: str | None = None) -> list[storage.models.Event] | storage.models.Event | None:
+def read_events(id: str | None = None) -> list[app.dto.EventResponse] | app.dto.EventResponse | None:
     result = None
     with session() as db:
         if id is None:
             result = db.query(storage.models.Event).all()
-        else:
-            result = db.get(storage.models.Event, id)
-    return result
+            return [app.dto.EventResponse.from_orm(value) for value in result]
+        
+        result = db.get(storage.models.Event, id)
+        return app.dto.EventResponse.from_orm(result)
 
 
 def update_event(id: str, event: app.dto.Event) -> bool:

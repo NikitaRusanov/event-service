@@ -1,3 +1,5 @@
+import uuid
+
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
 
@@ -45,3 +47,19 @@ def delete_user(id: int):
     if res := app.controllers.users.delete_user(id):
         return res
     return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content='User not found')
+
+
+@users_router.get('/{id}/subscribe', response_model=app.dto.UserResponse,
+                  response_model_exclude={'password'})
+def subscribe_to_event(id: int, event_id: uuid.UUID):
+    """
+    Subscribe a user to event
+    """
+
+    res = app.controllers.users.subscribe(id, str(event_id))
+
+    if res == app.dto.ResultCode.USER_NOT_FOUND:
+        return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content='Wrong user id')
+    if res == app.dto.ResultCode.EVENT_NOT_FOUND:
+        return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content='Wrong event id')
+    return res

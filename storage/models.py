@@ -26,7 +26,6 @@ class User(Base):
     following_events = relationship('Event', secondary='link')
 
 
-
 class Link(Base):
     __tablename__ = 'link'
 

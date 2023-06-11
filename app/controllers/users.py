@@ -1,6 +1,7 @@
 import app.dto
 
 import storage.users
+import storage.events
 
 
 def create_user(user: app.dto.User) -> int:
@@ -44,3 +45,12 @@ def delete_user(id: int) -> app.dto.UserResponse | None:
     if res:
         return user
     return None
+
+
+def subscribe(user_id: int, event_id: str) -> app.dto.UserResponse | app.dto.ResultCode:
+    if not storage.users.get_user(user_id):
+        return app.dto.ResultCode.USER_NOT_FOUND
+    if not storage.events.read_events(event_id):
+        return app.dto.ResultCode.EVENT_NOT_FOUND
+
+    return storage.users.subscribe(user_id, event_id)
