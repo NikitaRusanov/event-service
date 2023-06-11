@@ -24,14 +24,15 @@ def create_user(name: str, email: str, password: str) -> int:
 
 def get_user(id: int) -> app.dto.UserResponse | None:
     with session() as db:
-        result =  db.get(storage.models.User, id)
+        result = db.get(storage.models.User, id)
         result = app.dto.UserResponse.from_orm(result) if result else None
-    
+
     return result
-        
 
 
-def update_user(id: int, name: str | None = None, email: str | None = None) -> app.dto.UserResponse | None:
+def update_user(id: int,
+                name: str | None = None,
+                email: str | None = None) -> app.dto.UserResponse | None:
     with session() as db:
         if user := db.get(storage.models.User, id):
             user.name = name if name else user.name
@@ -40,7 +41,7 @@ def update_user(id: int, name: str | None = None, email: str | None = None) -> a
 
             return app.dto.UserResponse.from_orm(user)
     return None
-        
+
 
 def delete_user(id: int) -> bool:
     with session() as db:
@@ -48,6 +49,4 @@ def delete_user(id: int) -> bool:
             db.delete(user)
             db.commit()
             return True
-        else:
-            return False
-    
+        return False

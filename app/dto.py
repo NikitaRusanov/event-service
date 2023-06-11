@@ -39,7 +39,7 @@ class UserResponse(User):
     id: int
 
     @classmethod
-    def from_orm(cls, obj: storage.models.User) -> User:
+    def from_orm(cls, obj: storage.models.User) -> UserResponse:
         return cls(
             id = obj.id,
             name=obj.name,

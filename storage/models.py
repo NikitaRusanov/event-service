@@ -2,7 +2,8 @@ from sqlalchemy.orm import DeclarativeBase, relationship
 from sqlalchemy import Column, String, DateTime, Text, Integer, ForeignKey
 
 
-class Base(DeclarativeBase): pass
+class Base(DeclarativeBase):
+    pass
 
 
 class Event(Base):

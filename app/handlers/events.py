@@ -1,7 +1,7 @@
+import uuid
+
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
-
-import uuid
 
 import app.dto
 
@@ -30,7 +30,6 @@ def get_event(id: str) -> app.dto.EventResponse:
     Returns single evrnt by it's ID
     """
     db_response = storage.events.read_events(id)
-    
     if db_response is not None:
         event = app.dto.EventResponse.from_orm(db_response) # type: ignore
         return event
@@ -46,7 +45,7 @@ def create_event(event: app.dto.Event) -> uuid.UUID:
     return storage.events.create_event(event)
 
 
-@event_router.put('/{id}') 
+@event_router.put('/{id}')
 def update_event(id: str, event: app.dto.Event):
     """
     Change an existing event
@@ -55,8 +54,7 @@ def update_event(id: str, event: app.dto.Event):
 
     if result:
         return JSONResponse(status_code=status.HTTP_200_OK, content='Event updated')
-    else:
-        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content='Wrong id')
+    return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content='Wrong id')
 
 
 @event_router.delete('/{id}')
@@ -69,5 +67,4 @@ def delete_event(id: str):
 
     if result:
         return JSONResponse(status_code=status.HTTP_200_OK, content='Event deleted')
-    else:
-        return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content='Wrong id')
+    return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content='Wrong id')

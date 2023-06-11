@@ -20,7 +20,6 @@ def get_user(id: int) -> app.dto.UserResponse:
 
 
 def update_user(id: int, user: app.dto.User) -> app.dto.User | app.dto.ResultCode:
-    
     user_db = storage.users.get_user(id)
 
     if not user_db:
@@ -28,11 +27,10 @@ def update_user(id: int, user: app.dto.User) -> app.dto.User | app.dto.ResultCod
 
     if user_db.password != user.password:
         return app.dto.ResultCode.WRONG_PASS
-    
 
     res = storage.users.update_user(
         id=id,
-        name = user.name,
+        name=user.name,
         email=user.email,
     )
 
