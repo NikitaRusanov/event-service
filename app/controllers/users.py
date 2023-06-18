@@ -14,7 +14,7 @@ def create_user(user: app.dto.User) -> int:
     return user_id
 
 
-def get_user(id: int) -> app.dto.UserResponse:
+def get_user(id: int) -> app.dto.UserResponse | None:
     user = storage.users.get_user(id)
 
     return user

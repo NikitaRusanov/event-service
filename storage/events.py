@@ -23,10 +23,9 @@ def read_events(id: str | None = None) -> list[app.dto.EventResponse] | app.dto.
     with session() as db:
         if id is None:
             result = db.query(storage.models.Event).all()
-            return [app.dto.EventResponse.from_orm(value) for value in result]
-        
+            return [app.dto.EventResponse.from_orm(value) for value in result]     
         result = db.get(storage.models.Event, id)
-        return app.dto.EventResponse.from_orm(result)
+        return app.dto.EventResponse.from_orm(result) if result else result
 
 
 def update_event(id: str, event: app.dto.Event) -> bool:

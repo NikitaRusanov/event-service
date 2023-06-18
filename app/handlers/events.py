@@ -17,10 +17,7 @@ def get_all_events(start: int = 0, offset: int = 10) -> list[app.dto.EventRespon
     Returns the **offset** of the events, starting from the event with the number **start** 
     """
 
-    db_respones = storage.events.read_events()
-
-    events = [value for value in db_respones] # type: ignore
-
+    events = storage.events.read_events()
     return events[start : start + offset]
 
 
@@ -29,12 +26,10 @@ def get_event(id: str) -> app.dto.EventResponse:
     """
     Returns single evrnt by it's ID
     """
-    db_response = storage.events.read_events(id)
-    if db_response is not None:
-        event = db_response # type: ignore
-        return event
 
-    return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content='Wrong ID') # type: ignore
+    if event := storage.events.read_events(id):
+        return event
+    return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content='Event not found')
 
 
 @event_router.post('/')
@@ -54,7 +49,7 @@ def update_event(id: str, event: app.dto.Event):
 
     if result:
         return JSONResponse(status_code=status.HTTP_200_OK, content='Event updated')
-    return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content='Wrong id')
+    return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content='Wrong id')
 
 
 @event_router.delete('/{id}')
@@ -67,4 +62,4 @@ def delete_event(id: str):
 
     if result:
         return JSONResponse(status_code=status.HTTP_200_OK, content='Event deleted')
-    return JSONResponse(status_code=status.HTTP_400_BAD_REQUEST, content='Wrong id')
+    return JSONResponse(status_code=status.HTTP_404_NOT_FOUND, content='Wrong id')
